@@ -6,6 +6,7 @@ import com.chj.springbootdemo.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,7 +19,15 @@ public class PersonServiceImpl implements PersonService {
         return personRepository.findById(id);
     }
 
+    public List<Person> findAll(){
+        return personRepository.findAll();
+    }
+
     public void save(Person person){
         personRepository.save(person);
+    }
+
+    public void deleteById(Long id){
+        personRepository.deleteById(id);
     }
 }

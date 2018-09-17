@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/person")
 public class PersonController {
@@ -19,9 +21,21 @@ public class PersonController {
         return ResponseEntity.ok(person);
     }
 
+    @GetMapping("/find/all")
+    public ResponseEntity<List<Person>> findAll(){
+        List<Person> list = personService.findAll();
+        return ResponseEntity.ok(list);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<Void> save(@RequestBody Person person){
         personService.save(person);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id){
+        personService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }
