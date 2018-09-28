@@ -1,6 +1,7 @@
 package com.chj.springbootdemo.domain;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,8 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Data
+@Accessors(chain = true)
 @Entity
-@Table(name = "c_person")
+@Table(name = "person")
 public class Person {
 
     @Id
@@ -18,7 +20,8 @@ public class Person {
 
     private String name;
     private Integer age;
-    private String addr;
+    private String imId;
+    private String imToken;
 
     private Person(){}
 
@@ -27,7 +30,8 @@ public class Person {
         private Long id;
         private String name;
         private Integer age;
-        private String addr;
+        private String imId;
+        private String imToken;
 
         private PersonBuilder() {
         }
@@ -51,8 +55,13 @@ public class Person {
             return this;
         }
 
-        public PersonBuilder withAddr(String addr) {
-            this.addr = addr;
+        public PersonBuilder withImId(String imId) {
+            this.imId = imId;
+            return this;
+        }
+
+        public PersonBuilder withImToken(String imToken) {
+            this.imToken = imToken;
             return this;
         }
 
@@ -61,7 +70,8 @@ public class Person {
             person.setId(id);
             person.setName(name);
             person.setAge(age);
-            person.setAddr(addr);
+            person.setImId(imId);
+            person.setImToken(imToken);
             return person;
         }
     }

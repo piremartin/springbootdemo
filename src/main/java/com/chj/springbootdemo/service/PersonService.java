@@ -7,12 +7,14 @@ import java.util.Optional;
 
 public interface PersonService {
 
-    public Optional<Person> findById(Long id);
+    Optional<Person> findById(Long id);
 
-    public List<Person> findAll();
+    List<Person> findAll();
 
-    public void save(Person person);
+    void save(Person person);
 
-    public void deleteById(Long id);
+    void deleteById(Long id);
+
+    void updateImIdAndImTokenById(Long id, String imId, String imToken);
 
 }

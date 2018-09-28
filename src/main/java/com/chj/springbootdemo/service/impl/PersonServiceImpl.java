@@ -1,6 +1,6 @@
 package com.chj.springbootdemo.service.impl;
 
-import com.chj.springbootdemo.dao.PersonRepository;
+import com.chj.springbootdemo.repository.PersonRepository;
 import com.chj.springbootdemo.domain.Person;
 import com.chj.springbootdemo.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +29,9 @@ public class PersonServiceImpl implements PersonService {
 
     public void deleteById(Long id){
         personRepository.deleteById(id);
+    }
+
+    public void updateImIdAndImTokenById(Long id, String imId, String imToken){
+        personRepository.updateImIdAndImTokenById(id,imId,imToken);
     }
 }
