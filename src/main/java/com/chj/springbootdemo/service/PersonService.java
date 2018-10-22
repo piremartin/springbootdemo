@@ -17,4 +17,6 @@ public interface PersonService {
 
     void updateImIdAndImTokenById(Long id, String imId, String imToken);
 
+    void testTxPrivateLocal(Person person);
+
 }

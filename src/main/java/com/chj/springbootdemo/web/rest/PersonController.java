@@ -20,6 +20,12 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
+    @PostMapping("/testTxPrivateLocal")
+    public ResponseEntity<Void> testTxPrivateLocal(@RequestBody Person person){
+        personService.testTxPrivateLocal(person);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/batchGenYunxin")
     public ResponseEntity<Void> batchGenYunxin(){
         List<Long> ids = personService.findAll().stream().map(Person::getId).collect(Collectors.toList());
