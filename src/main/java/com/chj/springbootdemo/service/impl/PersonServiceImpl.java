@@ -17,24 +17,24 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonRepository personRepository;
 
-    public Optional<Person> findById(Long id){
+    public Optional<Person> findById(Long id) {
         return personRepository.findById(id);
     }
 
-    public List<Person> findAll(){
+    public List<Person> findAll() {
         return personRepository.findAll();
     }
 
-    public void save(Person person){
+    public void save(Person person) {
         personRepository.save(person);
     }
 
-    public void deleteById(Long id){
+    public void deleteById(Long id) {
         personRepository.deleteById(id);
     }
 
-    public void updateImIdAndImTokenById(Long id, String imId, String imToken){
-        personRepository.updateImIdAndImTokenById(id,imId,imToken);
+    public void updateImIdAndImTokenById(Long id, String imId, String imToken) {
+        personRepository.updateImIdAndImTokenById(id, imId, imToken);
     }
 
     @Override
@@ -42,7 +42,13 @@ public class PersonServiceImpl implements PersonService {
         txPrivateLocal(person);
     }
 
-    private void txPrivateLocal(Person person){
+    private void txPrivateLocal(Person person) {
         personRepository.save(person);
+    }
+
+    //invoke本类中的
+    @Override
+    public void testTxPublicInterface(Person person) {
+        save(person);
     }
 }

@@ -19,4 +19,6 @@ public interface PersonService {
 
     void testTxPrivateLocal(Person person);
 
+    void testTxPublicInterface(Person person);
+
 }

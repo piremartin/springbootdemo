@@ -20,9 +20,16 @@ public class PersonController {
     @Autowired
     private PersonService personService;
 
+
     @PostMapping("/testTxPrivateLocal")
     public ResponseEntity<Void> testTxPrivateLocal(@RequestBody Person person){
         personService.testTxPrivateLocal(person);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/testTxPublicInterface")
+    public ResponseEntity<Void> testTxPublicInterface(@RequestBody Person person){
+        personService.testTxPublicInterface(person);
         return ResponseEntity.ok().build();
     }
 
