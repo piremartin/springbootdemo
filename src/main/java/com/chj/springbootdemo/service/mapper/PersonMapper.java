@@ -5,7 +5,7 @@ import com.chj.springbootdemo.service.dto.PersonDTO;
 import com.chj.springbootdemo.web.rest.vo.PersonVO;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface PersonMapper {
 
     PersonDTO toDTO(Person person);

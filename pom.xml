@@ -27,24 +27,20 @@
     </properties>
 
     <dependencies>
+        <!--lombok and mapstruct-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-jdk8</artifactId>
             <version>${org.mapstruct.version}</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.mapstruct</groupId>-->
-            <!--<artifactId>mapstruct-processor</artifactId>-->
-            <!--<version>${org.mapstruct.version}</version>-->
-            <!--&lt;!&ndash; IntelliJ does not pick up the processor if it is not in the dependencies.-->
-             <!--There is already an open issue for IntelliJ see https://youtrack.jetbrains.com/issue/IDEA-150621-->
-            <!--&ndash;&gt;-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
 
-
-
+        <!-- other -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -58,10 +54,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
