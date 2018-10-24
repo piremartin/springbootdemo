@@ -5,27 +5,20 @@ import com.chj.springbootdemo.service.PersonService;
 import com.chj.springbootdemo.service.dto.PersonDTO;
 import com.chj.springbootdemo.service.mapper.PersonMapper;
 import com.chj.springbootdemo.web.rest.vo.PersonVO;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Data //why must data? setter unuseful?
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/person")
 public class PersonResource {
 
-    @Autowired
-    private PersonService personService;
-
+    private final PersonService personService;
     private final PersonMapper personMapper;
-
-    public PersonResource(PersonMapper personMapper){
-        this.personMapper = personMapper;
-    }
 
 
     @GetMapping("/get-by-id/{id}")

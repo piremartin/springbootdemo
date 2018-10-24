@@ -23,6 +23,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
+        <lombok.version> 1.18.2</lombok.version>
     </properties>
 
     <dependencies>
@@ -32,15 +33,15 @@
             <version>${org.mapstruct.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <version>${org.mapstruct.version}</version>
-            <!-- IntelliJ does not pick up the processor if it is not in the dependencies.
-             There is already an open issue for IntelliJ see https://youtrack.jetbrains.com/issue/IDEA-150621
-            -->
-            <scope>provided</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.mapstruct</groupId>-->
+            <!--<artifactId>mapstruct-processor</artifactId>-->
+            <!--<version>${org.mapstruct.version}</version>-->
+            <!--&lt;!&ndash; IntelliJ does not pick up the processor if it is not in the dependencies.-->
+             <!--There is already an open issue for IntelliJ see https://youtrack.jetbrains.com/issue/IDEA-150621-->
+            <!--&ndash;&gt;-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
 
 
 
@@ -92,13 +93,18 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.5.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
