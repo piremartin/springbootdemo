@@ -1,7 +1,6 @@
 package com.chj.springbootdemo.web.rest;
 
 import com.chj.springbootdemo.service.UserService;
-import com.chj.springbootdemo.service.impl.UserServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,7 +9,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserResource {
 
     @Resource(name = "userService")
 //    @Resource(type = UserService.class)

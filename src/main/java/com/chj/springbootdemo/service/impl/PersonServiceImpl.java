@@ -33,10 +33,6 @@ public class PersonServiceImpl implements PersonService {
         personRepository.deleteById(id);
     }
 
-    public void updateImIdAndImTokenById(Long id, String imId, String imToken) {
-        personRepository.updateImIdAndImTokenById(id, imId, imToken);
-    }
-
     @Override
     public void testTxPrivateLocal(Person person) {
         txPrivateLocal(person);

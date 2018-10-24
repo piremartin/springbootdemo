@@ -15,8 +15,6 @@ public interface PersonService {
 
     void deleteById(Long id);
 
-    void updateImIdAndImTokenById(Long id, String imId, String imToken);
-
     void testTxPrivateLocal(Person person);
 
     void testTxPublicInterface(Person person);
