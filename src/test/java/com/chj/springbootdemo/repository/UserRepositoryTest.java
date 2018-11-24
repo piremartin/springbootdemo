@@ -1,6 +1,6 @@
 package com.chj.springbootdemo.repository;
 
-import com.chj.springbootdemo.domain.Person;
+import com.chj.springbootdemo.domain.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,33 +14,33 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class PersonRepositoryTest {
+public class UserRepositoryTest {
 
-//    private Logger logger = LoggerFactory.getLogger(PersonRepositoryTest.class);
+//    private Logger logger = LoggerFactory.getLogger(UserRepositoryTest.class);
 
     @Autowired
-    private PersonRepository personRepository;
+    private UserRepository userRepository;
 
     @Test
     public void testLike(){
-        List<Person> personList = personRepository.findByNameLike("j%");
-//        personList.forEach(p-> logger.debug("name --- {}", p.getName()));
-        personList.forEach(p-> System.out.println("name --- "+ p.getName()));
+        List<User> userList = userRepository.findByNameLike("j%");
+//        userList.forEach(p-> logger.debug("name --- {}", p.getName()));
+        userList.forEach(p-> System.out.println("name --- "+ p.getName()));
     }
 
     @Test
     public void testTop(){
-        List<Person> list = personRepository.findTop3ByName("林志炫6");
+        List<User> list = userRepository.findTop3ByName("林志炫6");
         list.forEach(p-> System.out.println("id="+p.getId()+",name="+p.getName()));
     }
     @Test
     public void testSort(){
-        List<Person> list = personRepository.findByName("林志炫6",new Sort(Sort.Direction.DESC,"id"));
+        List<User> list = userRepository.findByName("林志炫6",new Sort(Sort.Direction.DESC,"id"));
         list.forEach(p-> System.out.println("id="+p.getId()+",name="+p.getName()));
     }
     @Test
     public void testPage(){
-        Page<Person> list = personRepository.findByName("林志炫6",PageRequest.of(0,3));
+        Page<User> list = userRepository.findByName("林志炫6",PageRequest.of(0,3));
         list.forEach(p-> System.out.println("id="+p.getId()+",name="+p.getName()));
     }
 }

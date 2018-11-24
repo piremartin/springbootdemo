@@ -3,7 +3,7 @@ package com.chj.springbootdemo.plain;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.chj.springbootdemo.domain.Person;
+import com.chj.springbootdemo.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,13 +13,13 @@ import static org.junit.Assert.assertEquals;
 
 public class PlainTest {
 
-    private Person person;
+    private User user;
 
     @Before
     public void setUp() throws Exception {
-        person = new Person();
-        person.setName("王力宏");
-        person.setAge(18);
+        user = new User();
+        user.setName("王力宏");
+        user.setAge(18);
     }
 
     @Test
@@ -30,31 +30,31 @@ public class PlainTest {
     }
     @Test
     public void test2() {
-        Person person = new Person();
-        person.setName("leehome");
-        person.setAge(18);
-        String jsonPerson = JSON.toJSONString(person);
-        Person parsePerson = JSON.parseObject(jsonPerson, Person.class);
+        User user = new User();
+        user.setName("leehome");
+        user.setAge(18);
+        String jsonPerson = JSON.toJSONString(user);
+        User parseUser = JSON.parseObject(jsonPerson, User.class);
         System.out.println("------");
     }
     @Test
     public void test3(){
-        List<Person> list = new ArrayList<>();
-        list.add(new Person("zhoujielun"));
-        list.add(new Person("linjunjie"));
+        List<User> list = new ArrayList<>();
+        list.add(new User("zhoujielun"));
+        list.add(new User("linjunjie"));
         String jsonList = JSON.toJSONString(list);
-        List<Person> parseList = JSON.parseArray(jsonList, Person.class);
+        List<User> parseList = JSON.parseArray(jsonList, User.class);
         System.out.println("-----------------");
     }
     @Test
     public void test4(){
-        Map<Long,Person> map = new HashMap<>();
-        map.put(1L,new Person("林志玲"));
-        map.put(2L,new Person("林俊杰"));
+        Map<Long,User> map = new HashMap<>();
+        map.put(1L,new User("林志玲"));
+        map.put(2L,new User("林俊杰"));
         String jsonMap = JSON.toJSONString(map) ;
 
-        Map<Long, Person> parseMap = JSON.parseObject(jsonMap,
-                new TypeReference<Map<Long, Person>>() {});
+        Map<Long, User> parseMap = JSON.parseObject(jsonMap,
+                new TypeReference<Map<Long, User>>() {});
         System.out.println(parseMap.get(2L));
         System.out.println("-----------------");
 
@@ -66,7 +66,7 @@ public class PlainTest {
         //此处可尝试用builder模式
 
 
-        String jsonPerson = JSON.toJSONString(person);
+        String jsonPerson = JSON.toJSONString(user);
         JSONObject jsonObjPerson = JSON.parseObject(jsonPerson);
         String name = jsonObjPerson.getString("name");
         assertEquals("王力宏", name);

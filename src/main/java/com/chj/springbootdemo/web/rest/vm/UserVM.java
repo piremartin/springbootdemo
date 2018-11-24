@@ -1,12 +1,14 @@
-package com.chj.springbootdemo.service.dto;
+package com.chj.springbootdemo.web.rest.vm;
 
 import lombok.Data;
 
 @Data
-public class PersonDTO {
+public class UserVM {
 
     private Long id;
 
     private String name;
     private Integer age;
+    private String addr;
+
 }

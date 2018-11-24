@@ -2,14 +2,15 @@ package com.chj.springbootdemo.web.rest;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.chj.springbootdemo.domain.Person;
-import com.chj.springbootdemo.web.rest.vo.PersonVO;
+import com.chj.springbootdemo.domain.User;
+import com.chj.springbootdemo.web.rest.vo.UserVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/test")
 public class TestResource {
+
 
     @PostMapping("/testPathVariable/{id}")
     public ResponseEntity<Long> testPathVariable(@PathVariable Long id){
@@ -24,27 +25,26 @@ public class TestResource {
     }
 
     @PostMapping("/testFastJson")
-    public ResponseEntity<PersonVO> testFastJson(){
+    public ResponseEntity<UserVO> testFastJson(){
 
-        Person person = new Person();
-        person.setName("leehome");
-        person.setAge(18);
+        User user = new User();
+        user.setName("leehome");
+        user.setAge(18);
 
-        String jsonPerson = JSON.toJSONString(person);
+        String jsonPerson = JSON.toJSONString(user);
         System.out.println(jsonPerson);
 
-        String singleQuote = JSON.toJSONString(person, SerializerFeature.UseSingleQuotes);
+        String singleQuote = JSON.toJSONString(user, SerializerFeature.UseSingleQuotes);
         System.out.println(singleQuote);
 
-        Person personFromJson = JSON.parseObject(jsonPerson, Person.class);
-        System.out.println(personFromJson);
+        User userFromJson = JSON.parseObject(jsonPerson, User.class);
+        System.out.println(userFromJson);
 
 
 
 
 
-        PersonVO personVO = PersonVO.fromEntity(person);
-        return ResponseEntity.ok(personVO);
+        return ResponseEntity.ok(new UserVO());
     }
 
 }
