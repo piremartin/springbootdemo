@@ -9,4 +9,9 @@ public class UserVM {
 
     private Integer age;
 
+
+    private String startTime;
+    private String endTime;
+    private int page;
+    private int size;
 }

@@ -7,6 +7,7 @@ import com.chj.springbootdemo.service.mapper.UserMapper;
 import com.chj.springbootdemo.web.rest.vm.UserVM;
 import com.chj.springbootdemo.web.rest.vo.UserVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,18 @@ public class UserResource {
         UserDTO saved = userService.save(userDTO);
         UserVO userVO = userMapper.toVO(saved);
         return ResponseEntity.ok(userVO);
+    }
+
+    @PostMapping("/queryCondition")
+    public ResponseEntity<Page<UserVO>> queryCondition(@RequestBody UserVM vm){
+        Pageable pageable = PageRequest.of(vm.getPage(), vm.getSize(), Sort.Direction.DESC, "createTime");
+        UserDTO userDTO = userMapper.vmToDto(vm);
+
+
+        Page<UserDTO> dtoPage = userService.findByCondition(userDTO, pageable);
+        List<UserVO> voList = userMapper.toVO(dtoPage.getContent());
+        Page<UserVO> voPage = new PageImpl<>(voList, dtoPage.getPageable(), dtoPage.getTotalElements());
+        return ResponseEntity.ok(voPage);
     }
 
     @GetMapping("/get-by-id/{id}")

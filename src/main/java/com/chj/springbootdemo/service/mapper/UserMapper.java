@@ -6,6 +6,8 @@ import com.chj.springbootdemo.web.rest.vm.UserVM;
 import com.chj.springbootdemo.web.rest.vo.UserVO;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
@@ -13,7 +15,10 @@ public interface UserMapper {
 
     User toEntity(UserDTO dto);
 
+    List<UserDTO> toDTO(List<User> entityList);
     UserDTO toDTO(User user);
+
+    List<UserVO> toVO(List<UserDTO> dtoList);
 
     UserVO toVO(UserDTO dto);
 }

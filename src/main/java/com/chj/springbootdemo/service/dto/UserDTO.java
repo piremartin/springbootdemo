@@ -8,4 +8,6 @@ import lombok.EqualsAndHashCode;
 @Data
 public class UserDTO extends User {
 
+    private String startTime;
+    private String endTime;
 }

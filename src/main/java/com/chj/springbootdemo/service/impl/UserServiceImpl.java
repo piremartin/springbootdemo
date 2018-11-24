@@ -6,9 +6,20 @@ import com.chj.springbootdemo.service.UserService;
 import com.chj.springbootdemo.service.dto.UserDTO;
 import com.chj.springbootdemo.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +30,36 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
+
+    @Override
+    public Page<UserDTO> findByCondition(UserDTO userDTO, Pageable pageable) {
+        Long id = userDTO.getId();
+        String name = userDTO.getName();
+        Integer age = userDTO.getAge();
+        String startTime = userDTO.getStartTime();
+        String endTime = userDTO.getEndTime();
+
+        Specification<User> specification = (Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb)-> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (id!=null){
+                predicates.add(cb.equal(root.get("id"), id));
+            }
+            if (StringUtils.isNotBlank(name)){
+                predicates.add(cb.like(root.get("name"), name+"%"));
+            }
+            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)){
+                predicates.add(cb.between(root.get("createTime"), LocalDateTime.parse(startTime), LocalDateTime.parse(endTime)));
+            }
+
+            Predicate[] array = new Predicate[predicates.size()];
+            return query.where(predicates.toArray(array)).getRestriction();
+        };
+        Page<User> entityPage = userRepository.findAll(specification, pageable);
+        List<UserDTO> dtoList = userMapper.toDTO(entityPage.getContent());
+        return new PageImpl<>(dtoList, pageable, entityPage.getTotalElements());
+    }
 
     @Override
     public void saveAll(List<User> list) {
