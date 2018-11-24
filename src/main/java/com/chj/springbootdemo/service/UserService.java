@@ -1,6 +1,7 @@
 package com.chj.springbootdemo.service;
 
 import com.chj.springbootdemo.domain.User;
+import com.chj.springbootdemo.service.dto.UserDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,7 @@ public interface UserService {
 
     List<User> findAll();
 
-    void save(User user);
+    UserDTO save(UserDTO userDTO);
 
     void saveAll(List<User> list);
 

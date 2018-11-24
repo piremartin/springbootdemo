@@ -4,6 +4,7 @@ import com.chj.springbootdemo.domain.User;
 import com.chj.springbootdemo.service.UserService;
 import com.chj.springbootdemo.service.dto.UserDTO;
 import com.chj.springbootdemo.service.mapper.UserMapper;
+import com.chj.springbootdemo.web.rest.vm.UserVM;
 import com.chj.springbootdemo.web.rest.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,13 @@ public class UserResource {
     private final UserService userService;
     private final UserMapper userMapper;
 
+    @PostMapping("/save")
+    public ResponseEntity<UserVO> save(@RequestBody UserVM vm){
+        UserDTO userDTO = userMapper.vmToDto(vm);
+        UserDTO saved = userService.save(userDTO);
+        UserVO userVO = userMapper.toVO(saved);
+        return ResponseEntity.ok(userVO);
+    }
 
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<UserVO> getById(@PathVariable Long id){
@@ -63,11 +71,6 @@ public class UserResource {
         return ResponseEntity.ok(list);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<Void> save(@RequestBody User user){
-        userService.save(user);
-        return ResponseEntity.ok().build();
-    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id){

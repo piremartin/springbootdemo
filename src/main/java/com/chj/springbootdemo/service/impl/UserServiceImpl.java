@@ -3,6 +3,8 @@ package com.chj.springbootdemo.service.impl;
 import com.chj.springbootdemo.domain.User;
 import com.chj.springbootdemo.repository.UserRepository;
 import com.chj.springbootdemo.service.UserService;
+import com.chj.springbootdemo.service.dto.UserDTO;
+import com.chj.springbootdemo.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public void saveAll(List<User> list) {
@@ -30,8 +33,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    public void save(User user) {
-        userRepository.save(user);
+    public UserDTO save(UserDTO userDTO) {
+        User user = userMapper.toEntity(userDTO);
+        User saved = userRepository.save(user);
+        return userMapper.toDTO(saved);
     }
 
     public void deleteById(Long id) {
@@ -50,6 +55,6 @@ public class UserServiceImpl implements UserService {
     //invoke本类中的
     @Override
     public void testTxPublicInterface(User user) {
-        save(user);
+//        save(user);
     }
 }
