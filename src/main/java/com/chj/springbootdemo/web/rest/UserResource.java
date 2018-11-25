@@ -33,7 +33,6 @@ public class UserResource {
     @PostMapping("/queryCondition")
     public ResponseEntity<Page<UserVO>> queryCondition(@RequestBody UserVM vm){
         Pageable pageable = PageRequest.of(vm.getPage(), vm.getSize(), Sort.Direction.DESC, "createTime");
-//        UserDTO userDTO = UserDTO.fromVM(vm);
         UserDTO userDTO = userMapper.vmToDto(vm);
 
         //use default

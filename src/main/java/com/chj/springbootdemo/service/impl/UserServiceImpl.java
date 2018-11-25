@@ -36,9 +36,6 @@ public class UserServiceImpl implements UserService {
     public Page<UserDTO> findByCondition(UserDTO userDTO, Pageable pageable) {
         Long id = userDTO.getId();
         String name = userDTO.getName();
-        Integer age = userDTO.getAge();
-        String startTime = userDTO.getStartTime();
-        String endTime = userDTO.getEndTime();
 
         Specification<User> specification = (Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb)-> {
             List<Predicate> predicates = new ArrayList<>();
@@ -49,8 +46,12 @@ public class UserServiceImpl implements UserService {
             if (StringUtils.isNotBlank(name)){
                 predicates.add(cb.like(root.get("name"), name+"%"));
             }
-            if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)){
-                predicates.add(cb.between(root.get("createTime"), LocalDateTime.parse(startTime), LocalDateTime.parse(endTime)));
+
+            try {
+                LocalDateTime startTime = LocalDateTime.parse(userDTO.getStartTime());
+                LocalDateTime endTime = LocalDateTime.parse(userDTO.getEndTime());
+                predicates.add(cb.between(root.get("createTime"), startTime, endTime));
+            }catch (Exception e){
             }
 
             Predicate[] array = new Predicate[predicates.size()];

@@ -7,9 +7,21 @@ import com.chj.springbootdemo.web.rest.vo.UserVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/test")
 public class TestResource {
+
+    @GetMapping("/a")
+    public ResponseEntity<Map<String, Object>> testA(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("isSuccess", false);
+        map.put("msg", "throw an exception");
+//        throw new RuntimeException(map.toString());
+        return ResponseEntity.ok(map);
+    }
 
 
     @PostMapping("/testPathVariable/{id}")
