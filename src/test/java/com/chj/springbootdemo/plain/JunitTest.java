@@ -5,15 +5,53 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.chj.springbootdemo.domain.User;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
-public class PlainTest {
+public class JunitTest {
 
     private User user;
+
+
+
+    @BeforeClass
+    public static void testBeforeClass(){
+        System.out.println("junit---before class");
+    }
+
+    @Test
+    public void test1(){
+        System.out.println("junit---test1");
+    }
+
+    //junit
+    @Test(expected = ArithmeticException.class)
+    public void testException(){
+//        User user = null;
+//        System.out.println(user.getName());
+
+        int i = 1/0;
+    }
+
+    @Ignore
+    @Test
+    public void testIgnore(){
+        System.out.println("junit - do nothing");
+    }
+
+    //junit
+    @Test(timeout = 1000)
+    public void testTimeout(){
+        while (true);
+    }
+
+
+
 
     @Before
     public void setUp() throws Exception {
