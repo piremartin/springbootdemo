@@ -17,6 +17,6 @@ public class WebLogAspect {
 
     @Before("webLog()")
     public void doBefore(){
-        System.out.println("---dobefore");
+//        System.out.println("---dobefore");
     }
 }

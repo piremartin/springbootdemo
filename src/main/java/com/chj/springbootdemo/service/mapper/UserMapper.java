@@ -5,6 +5,7 @@ import com.chj.springbootdemo.service.dto.UserDTO;
 import com.chj.springbootdemo.web.rest.vm.UserVM;
 import com.chj.springbootdemo.web.rest.vo.UserVO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -20,5 +21,6 @@ public interface UserMapper {
 
     List<UserVO> toVO(List<UserDTO> dtoList);
 
+    @Mapping(target = "createTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
     UserVO toVO(UserDTO dto);
 }

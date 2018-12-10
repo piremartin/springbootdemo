@@ -1,12 +1,14 @@
 package com.chj.springbootdemo.web.rest;
 
 import com.chj.springbootdemo.domain.User;
+import com.chj.springbootdemo.repository.LoginRecordRepository;
 import com.chj.springbootdemo.service.UserService;
 import com.chj.springbootdemo.service.dto.UserDTO;
 import com.chj.springbootdemo.service.mapper.UserMapper;
 import com.chj.springbootdemo.web.rest.vm.UserVM;
 import com.chj.springbootdemo.web.rest.vo.UserVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -21,6 +24,7 @@ public class UserResource {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final LoginRecordRepository loginRecordRepository;
 
     @PostMapping("/save")
     public ResponseEntity<UserVO> save(@RequestBody UserVM vm){
@@ -70,11 +74,18 @@ public class UserResource {
 
     @GetMapping("/find/{id}")
     public ResponseEntity<UserVO> findById(@PathVariable Long id){
+//        log.info("记录登录日志");
+//
+//        LoginRecordE entity = new LoginRecordE();
+//        entity.setLoginTime(Instant.now());
+//        LoginRecordE save = loginRecordRepository.save(entity);
+//        LoginRecordE loginRecordE = loginRecordRepository.findById(id).orElse(new LoginRecordE());
         User user = userService.findById(id).orElse(new User());
 
         UserDTO personDTO = userMapper.toDTO(user);
-        UserVO userVO = userMapper.toVO(personDTO);
-        return ResponseEntity.ok(userVO);
+        UserVO vo = userMapper.toVO(personDTO);
+
+        return ResponseEntity.ok(vo);
     }
 
     @GetMapping("/find/all")

@@ -12,6 +12,6 @@ public class UserVM {
 
     private String startTime;
     private String endTime;
-    private int page;
-    private int size;
+    private int page = 0;
+    private int size = 20;
 }
