@@ -1,6 +1,5 @@
 package com.chj.springbootdemo.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.chj.springbootdemo.domain.User;
 import com.chj.springbootdemo.repository.UserRepository;
 import com.chj.springbootdemo.service.UserService;
@@ -13,10 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -33,8 +35,20 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final StringRedisTemplate stringRedisTemplate;
-    private final String Key_User = "user:";
+//    private final StringRedisTemplate stringRedisTemplate;
+//    private final String Key_User = "user:";
+    private final String Key_Users = "users";
+    private HashOperations<String, Object, Object> opsForHash;
+
+    @PostConstruct
+    public void init(){
+        opsForHash = redisTemplate.opsForHash();
+    }
+//    @Autowired
+//    private RedisTemplate<String, Object> template;
+
+    @Resource(name="redisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
 
 
     @Override
@@ -72,20 +86,25 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAll(list);
     }
 
-    /**
-     * fetch from redis first
-     * @param id
-     * @return
-     */
+
     public UserDTO findById(Long id) {
-        String key = Key_User+id;
-        User user;
-        String value = stringRedisTemplate.opsForValue().get(key);
-        if (StringUtils.isNotBlank(value)){
-            user = JSON.parseObject(value, User.class);
-        }else {
+
+//        String key = Key_User+id;
+//        User user;
+//        String value = stringRedisTemplate.opsForValue().get(key);
+//        if (StringUtils.isNotBlank(value)){
+//            user = JSON.parseObject(value, User.class);
+//        }else {
+//            user = userRepository.findById(id).orElse(new User());
+//            stringRedisTemplate.opsForValue().set(key, JSON.toJSONString(user));
+//        }
+
+        User user = (User) opsForHash.get(Key_Users, id);
+        if (user==null){
+            log.debug("redis中id={}的User不存在",id);
             user = userRepository.findById(id).orElse(new User());
-            stringRedisTemplate.opsForValue().set(key, JSON.toJSONString(user));
+            log.debug("保存到redis的User:{}",user);
+            opsForHash.put(Key_Users, id, user);
         }
         return userMapper.toDTO(user);
     }
@@ -94,19 +113,23 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
-    /**
-     * redis: list, map
-     * @param userDTO
-     * @return
-     */
+
     public UserDTO save(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
-        User saved = userRepository.save(user);
-        return userMapper.toDTO(saved);
+        User save = userRepository.save(user);
+
+        log.debug("保存到数据库后，同步保存到redis, user:{}",save);
+
+        opsForHash.put(Key_Users, save.getId(), save);
+
+        return userMapper.toDTO(save);
     }
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);
+
+        log.debug("从redis删除id={}的User",id);
+        opsForHash.delete(Key_Users, id);
     }
 
     @Override

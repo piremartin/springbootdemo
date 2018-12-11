@@ -1,13 +1,18 @@
 package com.chj.springbootdemo.service.dto;
 
-import com.chj.springbootdemo.domain.User;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
+import java.time.LocalDateTime;
+
 @Data
-public class UserDTO extends User {
+public class UserDTO {
 
     private String startTime;
     private String endTime;
+
+    //from entity
+    private Long id;
+    private String name;
+    private Integer age;
+    private LocalDateTime createTime = LocalDateTime.now();
 }

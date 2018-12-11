@@ -19,12 +19,6 @@ public class User {
     private Integer age;
 
     @Column(name = "create_time")
-    private LocalDateTime createTime = LocalDateTime.now();
-
-    public User(){}
-
-    public User(String name){
-        this.name = name;
-    }
+    private LocalDateTime createTime;
 
 }
