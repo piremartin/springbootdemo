@@ -21,4 +21,12 @@ public class User {
     @Column(name = "create_time")
     private LocalDateTime createTime;
 
+    public User(){
+
+    }
+    public User(String name){
+        this.name = name;
+    }
+
+
 }
