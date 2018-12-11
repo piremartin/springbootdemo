@@ -1,5 +1,6 @@
 package com.chj.springbootdemo.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.chj.springbootdemo.domain.User;
 import com.chj.springbootdemo.repository.UserRepository;
 import com.chj.springbootdemo.service.UserService;
@@ -99,12 +100,14 @@ public class UserServiceImpl implements UserService {
 //            stringRedisTemplate.opsForValue().set(key, JSON.toJSONString(user));
 //        }
 
-        User user = (User) opsForHash.get(Key_Users, id);
+        String key = Key_Users;
+
+        User user = (User) opsForHash.get(key, String.valueOf(id));
         if (user==null){
             log.debug("redis中id={}的User不存在",id);
             user = userRepository.findById(id).orElse(new User());
             log.debug("保存到redis:{}",user);
-            opsForHash.put(Key_Users, id, user);
+            opsForHash.put(key, String.valueOf(id), JSON.toJSONString(user));
         }
         return userMapper.toDTO(user);
     }
