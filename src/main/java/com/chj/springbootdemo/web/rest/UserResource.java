@@ -2,7 +2,6 @@ package com.chj.springbootdemo.web.rest;
 
 import com.alibaba.fastjson.JSON;
 import com.chj.springbootdemo.domain.User;
-import com.chj.springbootdemo.repository.LoginRecordRepository;
 import com.chj.springbootdemo.service.UserService;
 import com.chj.springbootdemo.service.dto.UserDTO;
 import com.chj.springbootdemo.service.mapper.UserMapper;
@@ -28,53 +27,6 @@ public class UserResource {
     private final UserService userService;
     private final UserMapper userMapper;
     private final StringRedisTemplate stringRedisTemplate;
-    private final LoginRecordRepository loginRecordRepository;
-
-    @PostMapping("/save")
-    public ResponseEntity<UserVO> save(@RequestBody UserVM vm){
-        UserDTO userDTO = userMapper.vmToDto(vm);
-        UserDTO saved = userService.save(userDTO);
-        UserVO userVO = userMapper.toVO(saved);
-        return ResponseEntity.ok(userVO);
-    }
-
-    @PostMapping("/queryCondition")
-    public ResponseEntity<Page<UserVO>> queryCondition(@RequestBody UserVM vm){
-        Pageable pageable = PageRequest.of(vm.getPage(), vm.getSize(), Sort.Direction.DESC, "createTime");
-        UserDTO userDTO = userMapper.vmToDto(vm);
-
-        //use default
-        userDTO.setStartTime(userDTO.getStartTime()+"T00:00:00");
-        userDTO.setEndTime(userDTO.getEndTime()+"T23:59:59");
-
-        Page<UserDTO> dtoPage = userService.findByCondition(userDTO, pageable);
-        List<UserVO> voList = userMapper.toVO(dtoPage.getContent());
-        Page<UserVO> voPage = new PageImpl<>(voList, dtoPage.getPageable(), dtoPage.getTotalElements());
-        return ResponseEntity.ok(voPage);
-    }
-
-    @GetMapping("/get-by-id/{id}")
-    public ResponseEntity<UserVO> getById(@PathVariable Long id){
-        User user = new User();
-        user.setName("leehome");
-        user.setAge(18);
-
-        return ResponseEntity.ok(new UserVO());
-
-    }
-
-    @PostMapping("/testTxPrivateLocal")
-    public ResponseEntity<Void> testTxPrivateLocal(@RequestBody User user){
-        userService.testTxPrivateLocal(user);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/testTxPublicInterface")
-    public ResponseEntity<Void> testTxPublicInterface(@RequestBody User user){
-        userService.testTxPublicInterface(user);
-        return ResponseEntity.ok().build();
-    }
-
 
     @GetMapping("/find-by-id/{id}")
     public ResponseEntity<UserVO> findById(@PathVariable Long id){
@@ -104,6 +56,29 @@ public class UserResource {
         return ResponseEntity.ok(vo);
     }
 
+    @PostMapping("/save")
+    public ResponseEntity<UserVO> save(@RequestBody UserVM vm){
+        UserDTO userDTO = userMapper.vmToDto(vm);
+        UserDTO saved = userService.save(userDTO);
+        UserVO userVO = userMapper.toVO(saved);
+        return ResponseEntity.ok(userVO);
+    }
+
+    @PostMapping("/queryCondition")
+    public ResponseEntity<Page<UserVO>> queryCondition(@RequestBody UserVM vm){
+        Pageable pageable = PageRequest.of(vm.getPage(), vm.getSize(), Sort.Direction.DESC, "createTime");
+        UserDTO userDTO = userMapper.vmToDto(vm);
+
+        //use default
+        userDTO.setStartTime(userDTO.getStartTime()+"T00:00:00");
+        userDTO.setEndTime(userDTO.getEndTime()+"T23:59:59");
+
+        Page<UserDTO> dtoPage = userService.findByCondition(userDTO, pageable);
+        List<UserVO> voList = userMapper.toVO(dtoPage.getContent());
+        Page<UserVO> voPage = new PageImpl<>(voList, dtoPage.getPageable(), dtoPage.getTotalElements());
+        return ResponseEntity.ok(voPage);
+    }
+
     @GetMapping("/find/all")
     public ResponseEntity<List<UserVO>> findAll(){
         List<UserVO> list = userService.findAll()
@@ -118,6 +93,18 @@ public class UserResource {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id){
         userService.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/testTxPrivateLocal")
+    public ResponseEntity<Void> testTxPrivateLocal(@RequestBody User user){
+        userService.testTxPrivateLocal(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/testTxPublicInterface")
+    public ResponseEntity<Void> testTxPublicInterface(@RequestBody User user){
+        userService.testTxPublicInterface(user);
         return ResponseEntity.ok().build();
     }
 }
