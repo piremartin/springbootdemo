@@ -1,16 +1,19 @@
 package com.chj.springbootdemo.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.chj.springbootdemo.domain.User;
 import com.chj.springbootdemo.repository.UserRepository;
 import com.chj.springbootdemo.service.UserService;
 import com.chj.springbootdemo.service.dto.UserDTO;
 import com.chj.springbootdemo.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +24,8 @@ import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -30,6 +33,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final StringRedisTemplate stringRedisTemplate;
+    private final String Key_User = "user:";
 
 
     @Override
@@ -67,14 +72,33 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAll(list);
     }
 
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    /**
+     * fetch from redis first
+     * @param id
+     * @return
+     */
+    public UserDTO findById(Long id) {
+        String key = Key_User+id;
+        User user;
+        String value = stringRedisTemplate.opsForValue().get(key);
+        if (StringUtils.isNotBlank(value)){
+            user = JSON.parseObject(value, User.class);
+        }else {
+            user = userRepository.findById(id).orElse(new User());
+            stringRedisTemplate.opsForValue().set(key, JSON.toJSONString(user));
+        }
+        return userMapper.toDTO(user);
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    /**
+     * redis: list, map
+     * @param userDTO
+     * @return
+     */
     public UserDTO save(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
         User saved = userRepository.save(user);
