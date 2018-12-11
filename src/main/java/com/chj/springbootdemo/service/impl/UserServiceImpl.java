@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
         if (user==null){
             log.debug("redis中id={}的User不存在",id);
             user = userRepository.findById(id).orElse(new User());
-            log.debug("保存到redis的User:{}",user);
+            log.debug("保存到redis:{}",user);
             opsForHash.put(Key_Users, id, user);
         }
         return userMapper.toDTO(user);
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(userDTO);
         User save = userRepository.save(user);
 
-        log.debug("保存到数据库后，同步保存到redis, user:{}",save);
+        log.debug("保存到数据库后，同步保存到redis:{}",save);
 
         opsForHash.put(Key_Users, save.getId(), save);
 
