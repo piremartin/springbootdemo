@@ -12,6 +12,8 @@ import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,15 +26,28 @@ public class UserResource {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @GetMapping("/find-by-id/{id}")
-    public ResponseEntity<UserVO> findById(@PathVariable Long id) {
+    @GetMapping("/find-by-id")
+    public ResponseEntity<UserVO> findById(@RequestParam Long id) {
         UserDTO dto = userService.findById(id);
         UserVO vo = userMapper.toVO(dto);
         return ResponseEntity.ok(vo);
     }
 
+    @GetMapping("/find/{id}")
+    public ResponseEntity<UserVO> findOne(@NotNull(message = "入参不能为空") @PathVariable Long id) {
+        UserDTO dto = userService.findById(id);
+        UserVO vo = userMapper.toVO(dto);
+        return ResponseEntity.ok(vo);
+    }
+
+    private void check(Integer age){
+        if (age!=null && age < 1){
+            throw new RuntimeException("illegal param");
+        }
+    }
+
     @PostMapping("/save")
-    public ResponseEntity<UserVO> save(@RequestBody UserVM vm) {
+    public ResponseEntity<UserVO> save(@Valid @RequestBody UserVM vm) {
         UserDTO userDTO = userMapper.vmToDto(vm);
         UserDTO saved = userService.save(userDTO);
         UserVO userVO = userMapper.toVO(saved);

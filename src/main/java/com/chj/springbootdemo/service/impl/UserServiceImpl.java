@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
 
         log.debug("保存到数据库后，同步保存到redis:{}",save);
 
-        opsForHash.put(Key_Users, save.getId(), save);
+        opsForHash.put(Key_Users, String.valueOf(save.getId()), JSON.toJSONString(save));
 
         return userMapper.toDTO(save);
     }
