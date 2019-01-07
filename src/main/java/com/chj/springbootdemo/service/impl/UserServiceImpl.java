@@ -9,6 +9,7 @@ import com.chj.springbootdemo.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,12 @@ public class UserServiceImpl implements UserService {
     @Resource(name="redisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
+
+    @Override
+    public List<UserDTO> findAll(Example<User> example) {
+        List<User> userList = userRepository.findAll(example);
+        return userMapper.toDTO(userList);
+    }
 
     @Override
     public Page<UserDTO> findByCondition(UserDTO userDTO, Pageable pageable) {
