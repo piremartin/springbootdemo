@@ -26,6 +26,28 @@ public class UserResource {
     private final UserService userService;
     private final UserMapper userMapper;
 
+
+    @GetMapping("/find-by-example")
+    public ResponseEntity<List<UserDTO>> findByExample(){
+        User user = new User();
+        user.setName("王力宏");
+        Example<User> example = Example.of(user);
+        List<UserDTO> list = userService.findAll(example);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/find-by-example-matcher")
+    public ResponseEntity<List<UserDTO>> findByExampleMatcher(){
+        User user = new User();
+        user.setName("caiyi");
+
+        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher("name",
+                ExampleMatcher.GenericPropertyMatchers.startsWith());
+        Example<User> example = Example.of(user, matcher);
+        List<UserDTO> list = userService.findAll(example);
+        return ResponseEntity.ok(list);
+    }
+
     @GetMapping("/find-by-id")
     public ResponseEntity<UserVO> findById(@RequestParam Long id) {
         UserDTO dto = userService.findById(id);
