@@ -2,6 +2,7 @@ package com.chj.springbootdemo.web.rest;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.chj.springbootdemo.exception.BadRequestException;
 import com.chj.springbootdemo.domain.User;
 import com.chj.springbootdemo.web.rest.vo.UserVO;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,17 @@ import java.util.Map;
 @RestController
 @RequestMapping("/test")
 public class TestResource {
+
+    @GetMapping("/handle-exception/{tag}")
+    public ResponseEntity<Map<String,Object>> newException(@PathVariable Integer tag) throws Exception{
+        Map<String, Object> map = new HashMap<>();
+        if (tag==1) {
+            throw new BadRequestException();
+        }else if (tag==2){
+            throw new RuntimeException("this is 500 error");
+        }
+        return ResponseEntity.ok(map);
+    }
 
     @GetMapping("/a")
     public ResponseEntity<Map<String, Object>> testA(){
