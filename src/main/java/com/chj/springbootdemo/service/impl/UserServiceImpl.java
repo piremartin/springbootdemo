@@ -14,12 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -29,29 +27,24 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-//    private final StringRedisTemplate stringRedisTemplate;
+    //    private final StringRedisTemplate stringRedisTemplate;
 //    private final String Key_User = "user:";
     private final String Key_Users = "users";
-    private HashOperations<String, Object, Object> opsForHash;
 
-    @PostConstruct
-    public void init(){
-        opsForHash = redisTemplate.opsForHash();
-    }
+
 //    @Autowired
 //    private RedisTemplate<String, Object> template;
 
-    @Resource(name="redisTemplate")
+    @Resource(name = "redisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
-
 
     @Override
     public List<UserDTO> findAll(Example<User> example) {
@@ -64,21 +57,21 @@ public class UserServiceImpl implements UserService {
         Long id = userDTO.getId();
         String name = userDTO.getName();
 
-        Specification<User> specification = (Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb)-> {
+        Specification<User> specification = (Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (id!=null){
+            if (id != null) {
                 predicates.add(cb.equal(root.get("id"), id));
             }
-            if (StringUtils.isNotBlank(name)){
-                predicates.add(cb.like(root.get("name"), name+"%"));
+            if (StringUtils.isNotBlank(name)) {
+                predicates.add(cb.like(root.get("name"), name + "%"));
             }
 
             try {
                 LocalDateTime startTime = LocalDateTime.parse(userDTO.getStartTime());
                 LocalDateTime endTime = LocalDateTime.parse(userDTO.getEndTime());
                 predicates.add(cb.between(root.get("createTime"), startTime, endTime));
-            }catch (Exception e){
+            } catch (Exception e) {
             }
 
             Predicate[] array = new Predicate[predicates.size()];
@@ -95,51 +88,43 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
     public UserDTO findById(Long id) {
-
-//        String key = Key_User+id;
-//        User user;
-//        String value = stringRedisTemplate.opsForValue().get(key);
-//        if (StringUtils.isNotBlank(value)){
-//            user = JSON.parseObject(value, User.class);
-//        }else {
-//            user = userRepository.findById(id).orElse(new User());
-//            stringRedisTemplate.opsForValue().set(key, JSON.toJSONString(user));
-//        }
-
         String key = Key_Users;
 
-        User user = (User) opsForHash.get(key, String.valueOf(id));
-        if (user==null){
-            log.debug("redis中id={}的User不存在",id);
+        User user = (User) redisTemplate.opsForHash().get(key, String.valueOf(id));
+        if (user == null) {
+            log.debug("redis中id={}的User不存在", id);
             user = userRepository.findById(id).orElse(new User());
-            log.debug("保存到redis:{}",user);
-            opsForHash.put(key, String.valueOf(id), JSON.toJSONString(user));
+            log.debug("保存到redis:{}", user);
+            redisTemplate.opsForHash().put(key, String.valueOf(id), JSON.toJSONString(user));
         }
         return userMapper.toDTO(user);
     }
 
+    @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-
+    @Override
     public UserDTO save(UserDTO userDTO) {
         User user = userMapper.toEntity(userDTO);
         User save = userRepository.save(user);
 
-        log.debug("保存到数据库后，同步保存到redis:{}",save);
+        log.debug("保存到数据库后，同步保存到redis:{}", save);
 
-        opsForHash.put(Key_Users, String.valueOf(save.getId()), JSON.toJSONString(save));
+        redisTemplate.opsForHash().put(Key_Users, String.valueOf(save.getId()), JSON.toJSONString(save));
 
         return userMapper.toDTO(save);
     }
 
+    @Override
     public void deleteById(Long id) {
         userRepository.deleteById(id);
 
-        log.debug("从redis删除id={}的User",id);
-        opsForHash.delete(Key_Users, id);
+        log.debug("从redis删除id={}的User", id);
+        redisTemplate.opsForHash().delete(Key_Users, id);
     }
 
     @Override
