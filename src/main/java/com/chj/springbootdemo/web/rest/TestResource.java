@@ -5,6 +5,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.chj.springbootdemo.exception.BadRequestException;
 import com.chj.springbootdemo.domain.User;
 import com.chj.springbootdemo.web.rest.vo.UserVO;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ import java.util.Map;
 public class TestResource {
 
     @GetMapping("/handle-exception/{tag}")
-    public ResponseEntity<Map<String,Object>> newException(@PathVariable Integer tag) throws Exception{
+    public ResponseEntity<Map<String,Object>> newException(@Range(min = 1, max = 2, message = "not in range") @PathVariable Integer tag) throws Exception{
         Map<String, Object> map = new HashMap<>();
         if (tag==1) {
             throw new BadRequestException();

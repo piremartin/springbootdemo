@@ -8,7 +8,7 @@ import java.time.Instant;
 @Data
 @Entity
 @Table(name = "login_record")
-public class LoginRecordE {
+public class LoginRecord {
 
     @Id
     @GeneratedValue

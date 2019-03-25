@@ -1,6 +1,6 @@
 package com.chj.springbootdemo.service.dto;
 
-import com.chj.springbootdemo.domain.LoginRecordE;
+import com.chj.springbootdemo.domain.LoginRecord;
 
-public class LoginRecordDTO extends LoginRecordE {
+public class LoginRecordDTO extends LoginRecord {
 }
