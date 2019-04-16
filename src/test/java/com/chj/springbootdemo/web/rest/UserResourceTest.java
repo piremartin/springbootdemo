@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,5 +95,36 @@ public class UserResourceTest {
             id++;
             age++;
         }
+    }
+
+    @Test
+    public void test_batch_insert(){
+        List<User> users = new ArrayList<>();
+
+        Long id = 10031L;
+        int age = 22;
+        LocalDateTime now = LocalDateTime.now();
+
+        for (int i = 0; i < 100; i++) {
+            User user = new User();
+            user.setId(id);
+            user.setName("jay");
+            user.setAge(age);
+            user.setCreateTime(now);
+            users.add(user);
+
+            id++;
+            age++;
+        }
+
+        String sql = "insert into user(id, `name`, age, create_time) value (:id, :name, :age, :createTime)";
+        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(users.toArray());
+        long start = System.currentTimeMillis();
+        System.out.println("start:"+start);
+        namedParameterJdbcTemplate.batchUpdate(sql, batch);
+        long end = System.currentTimeMillis();
+        System.out.println("end:"+end);
+        System.out.println("cost millis:"+(end - start));
+
     }
 }
