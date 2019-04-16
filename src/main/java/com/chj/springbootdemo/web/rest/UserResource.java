@@ -1,6 +1,7 @@
 package com.chj.springbootdemo.web.rest;
 
 import com.chj.springbootdemo.domain.User;
+import com.chj.springbootdemo.repository.UserRepository;
 import com.chj.springbootdemo.service.UserService;
 import com.chj.springbootdemo.service.dto.UserDTO;
 import com.chj.springbootdemo.service.mapper.UserMapper;
@@ -10,11 +11,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,7 +29,24 @@ import java.util.stream.Collectors;
 public class UserResource {
 
     private final UserService userService;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @PostMapping("/add-by-named-jdbc")
+    public ResponseEntity addByNamedJdbc(@RequestBody User user) {
+        userRepository.save(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/named-jdbc/query1")
+    public ResponseEntity query1() {
+        String sql = "select * from user where name like :name";
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "n%");
+        List<User> users = namedParameterJdbcTemplate.query(sql, map, new BeanPropertyRowMapper<>(User.class));
+        return ResponseEntity.ok(users);
+    }
 
 
     @GetMapping("/find-by-example")
@@ -82,8 +104,8 @@ public class UserResource {
         UserDTO userDTO = userMapper.vmToDto(vm);
 
         //use default
-        userDTO.setStartTime(userDTO.getStartTime() + "T00:00:00");
-        userDTO.setEndTime(userDTO.getEndTime() + "T23:59:59");
+//        userDTO.setStartTime(userDTO.getStartTime() + "T00:00:00");
+//        userDTO.setEndTime(userDTO.getEndTime() + "T23:59:59");
 
         Page<UserDTO> dtoPage = userService.findByCondition(userDTO, pageable);
         List<UserVO> voList = userMapper.toVO(dtoPage.getContent());

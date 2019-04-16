@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserDTO> findByCondition(UserDTO userDTO, Pageable pageable) {
-        Long id = userDTO.getId();
+        Long id = 1L;//userDTO.getId();
         String name = userDTO.getName();
 
         Specification<User> specification = (Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
@@ -68,8 +68,8 @@ public class UserServiceImpl implements UserService {
             }
 
             try {
-                LocalDateTime startTime = LocalDateTime.parse(userDTO.getStartTime());
-                LocalDateTime endTime = LocalDateTime.parse(userDTO.getEndTime());
+                LocalDateTime startTime = LocalDateTime.now();//LocalDateTime.parse(userDTO.getStartTime());
+                LocalDateTime endTime = LocalDateTime.now();//LocalDateTime.parse(userDTO.getEndTime());
                 predicates.add(cb.between(root.get("createTime"), startTime, endTime));
             } catch (Exception e) {
             }
