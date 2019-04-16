@@ -76,4 +76,20 @@ public class UserResourceTest {
         List<Long> ids = namedParameterJdbcTemplate.queryForList(sql, map, Long.class);
         System.out.println(ids);
     }
+
+    @Test
+    public void test_insert(){
+        Long id = 8L;
+        int age = 22;
+        for (int i = 0; i < 3; i++) {
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("id", id);
+            paramMap.put("age", age);
+            String sql = "insert into user(id, `name`, age) value (:id, 'xiaoming', :age)";
+            int update = namedParameterJdbcTemplate.update(sql, paramMap);
+            System.out.println(update);
+            id++;
+            age++;
+        }
+    }
 }
