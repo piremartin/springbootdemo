@@ -6,5 +6,10 @@ package com.chj.springbootdemo.service;
  */
 public interface MyService {
 
+    /**
+     * getPwById
+     * @param id
+     * @return
+     */
     String getPwById(Long id);
 }
