@@ -5,6 +5,10 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.Instant;
 
+/**
+ * 登录记录
+ * @author chehaojie
+ */
 @Data
 @Entity
 @Table(name = "login_record")

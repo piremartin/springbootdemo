@@ -6,6 +6,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 用户表
+ * @author chehaojie
+ */
 @Data
 @Entity
 @Table(name = "user")
