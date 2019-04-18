@@ -8,6 +8,7 @@ import java.time.Instant;
 /**
  * 登录记录
  * @author chehaojie
+ * @date 2019-4-18 11:44:28
  */
 @Data
 @Entity

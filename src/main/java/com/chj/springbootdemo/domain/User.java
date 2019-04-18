@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 /**
  * 用户表
  * @author chehaojie
+ * @date 2019-4-18 11:47:39
  */
 @Data
 @Entity
