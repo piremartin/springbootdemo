@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+/**
+ * @author chj
+ */
 public interface UserService {
 
     List<UserDTO> findAll(Example<User> example);
