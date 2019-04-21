@@ -16,6 +16,16 @@ import java.util.Map;
 @RequestMapping("/test")
 public class TestResource {
 
+    @GetMapping("/admin/111")
+    public ResponseEntity admin111(){
+        return ResponseEntity.ok("111");
+    }
+
+    @GetMapping("/user/222")
+    public ResponseEntity user222(){
+        return ResponseEntity.ok("222");
+    }
+
     @GetMapping("/handle-exception/{tag}")
     public ResponseEntity<Map<String,Object>> newException(@Range(min = 1, max = 2, message = "not in range") @PathVariable Integer tag) throws Exception{
         Map<String, Object> map = new HashMap<>();
