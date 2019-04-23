@@ -13,4 +13,6 @@ public interface MyService {
      * @return
      */
     String getPwById(Long id);
+
+    String sayHello();
 }
