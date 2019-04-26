@@ -1,6 +1,7 @@
 package com.chj.springbootdemo.intercepter;
 
 import com.chj.springbootdemo.service.MyService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author chehaojie
  * @date 2019/04/23 16:01
  */
+@Slf4j
 @Component
 public class LogCostInterceptor implements HandlerInterceptor {
 
@@ -22,8 +24,8 @@ public class LogCostInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String s = myService.sayHello();
-        System.out.println(s);
-        return false;
+        log.debug(s);
+        return true;
     }
 
     @Override
