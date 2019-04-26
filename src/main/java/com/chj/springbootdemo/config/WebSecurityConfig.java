@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author chehaojie
@@ -16,14 +17,11 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
     @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
+    public static PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
         //这里使用了密码不进行加密验证，正式项目还是必须要用加密验证方式
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+        return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
@@ -33,11 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
-//        auth.inMemoryAuthentication()
-//                .withUser("root")
-//                .password("123456")
-//                .roles("USER");
+//        auth.userDetailsService(customUserService()).passwordEncoder(passwordEncoder());
+        auth.inMemoryAuthentication()
+                .passwordEncoder(passwordEncoder())
+                .withUser("root")
+                .password("123456")
+                .roles("USER");
     }
 
     @Override
