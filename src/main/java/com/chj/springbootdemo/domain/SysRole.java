@@ -2,7 +2,6 @@ package com.chj.springbootdemo.domain;
 
 import lombok.Data;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,6 +21,5 @@ public class SysRole {
     /**
      * 角色名称
      */
-    @Column(name = "role_name")
-    private String roleName;
+    private String name;
 }
