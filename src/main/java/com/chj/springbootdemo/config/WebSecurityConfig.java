@@ -20,7 +20,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public static PasswordEncoder passwordEncoder() {
 //        return new BCryptPasswordEncoder();
-        //这里使用了密码不进行加密验证，正式项目还是必须要用加密验证方式
         return NoOpPasswordEncoder.getInstance();
     }
 
