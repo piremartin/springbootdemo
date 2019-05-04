@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 /**
  * @author chehaojie
  * @date 2019/04/15 17:36
@@ -30,6 +28,37 @@ public class UserResourceTest {
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Test
+    public void test_batchInsertUser(){
+        LocalDateTime now = LocalDateTime.now();
+        List<User> users = new ArrayList<>();
+        User user = new User();
+        user.setName("leehome");
+        user.setAge(18);
+        user.setCreateTime(now);
+        users.add(user);
+
+        user = new User();
+        user.setName("jay");
+        user.setAge(19);
+        user.setCreateTime(now);
+        users.add(user);
+
+        String sql = "insert into user(`name`, age, create_time) values(:name, :age, :createTime)";
+        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(users.toArray());
+        namedParameterJdbcTemplate.batchUpdate(sql, batch);
+
+    }
+
+    @Test
+    public void test_addUser(){
+        String sql = "insert into User(`name`, age, create_time) " +
+                "values('ferrari', 31, :createTime)";
+        Map<String, Object> map = new HashMap<>(1);
+        map.put("createTime", LocalDateTime.now());
+        namedParameterJdbcTemplate.update(sql, map);
+    }
 
     @Test
     public void test_query1(){
