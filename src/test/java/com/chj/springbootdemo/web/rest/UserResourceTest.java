@@ -2,6 +2,7 @@ package com.chj.springbootdemo.web.rest;
 
 import com.chj.springbootdemo.domain.User;
 import com.chj.springbootdemo.service.dto.UserDTO;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,10 +56,38 @@ public class UserResourceTest {
     @Test
     public void test_addUser(){
         String sql = "insert into User(`name`, age, create_time) " +
-                "values('ferrari', 31, :createTime)";
+                "values('lucas', 18, :createTime)";
         Map<String, Object> map = new HashMap<>(1);
         map.put("createTime", LocalDateTime.now());
         namedParameterJdbcTemplate.update(sql, map);
+    }
+
+    @Test
+    public void test_queryForObject_exist(){
+
+        String sql = "select `name` from user where id=1";
+        String name = namedParameterJdbcTemplate.queryForObject(sql, new HashMap<>(1), String.class);
+        Assert.assertTrue(StringUtils.hasText(name));
+    }
+
+    @Test
+    public void test_queryForObject_exception_except1_actual0(){
+
+        String sql = "select `name` from user where id=0";
+        //org.springframework.dao.EmptyResultDataAccessException: Incorrect result size: expected 1, actual 0
+        String name = namedParameterJdbcTemplate.queryForObject(sql, new HashMap<>(1), String.class);
+        //这一步没有执行到
+        Assert.assertTrue(StringUtils.hasText(name));
+    }
+
+    @Test
+    public void test_queryForObject_exception_except1_actual2(){
+
+        String sql = "select `name` from user where age=18";
+        //org.springframework.dao.IncorrectResultSizeDataAccessException: Incorrect result size: expected 1, actual 2
+        String name = namedParameterJdbcTemplate.queryForObject(sql, new HashMap<>(1), String.class);
+        //这一步没有执行到
+        Assert.assertTrue(StringUtils.hasText(name));
     }
 
     @Test
