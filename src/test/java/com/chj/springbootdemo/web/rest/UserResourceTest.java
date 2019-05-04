@@ -2,6 +2,7 @@ package com.chj.springbootdemo.web.rest;
 
 import com.chj.springbootdemo.domain.User;
 import com.chj.springbootdemo.service.dto.UserDTO;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +37,20 @@ public class UserResourceTest {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Test
+    public void test_randomNumeric(){
+        List<String> nums = new ArrayList<>();
+        for (int i = 0; i < 1 * 10000; i++) {
+            String num = RandomStringUtils.randomNumeric(7);
+            if (nums.contains(num)) {
+                Assert.fail("already contains: "+ num);
+            }else {
+                System.out.println("i = "+i+"---"+num);
+                nums.add(num);
+            }
+        }
+    }
+
+    @Test
     public void test_batchInsertUser() {
         LocalDateTime now = LocalDateTime.now();
         List<User> users = new ArrayList<>();
@@ -60,7 +75,7 @@ public class UserResourceTest {
     @Test
     public void test_addUser_use_map() {
         String sql = "insert into User(`name`, age, create_time) " +
-                "values('lucas', 18, :createTime)";
+                "values('liudehua', 50, :createTime)";
         Map<String, Object> map = new HashMap<>(1);
         map.put("createTime", LocalDateTime.now());
         namedParameterJdbcTemplate.update(sql, map);
