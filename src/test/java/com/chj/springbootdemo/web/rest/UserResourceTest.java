@@ -1,8 +1,9 @@
 package com.chj.springbootdemo.web.rest;
 
 import com.chj.springbootdemo.domain.User;
+import com.chj.springbootdemo.repository.UserRepository;
 import com.chj.springbootdemo.service.dto.UserDTO;
-import org.apache.commons.lang3.RandomStringUtils;
+import com.chj.springbootdemo.service.util.IdGeneratorUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,10 +21,7 @@ import org.springframework.util.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author chehaojie
@@ -36,19 +34,8 @@ public class UserResourceTest {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    @Test
-    public void test_randomNumeric(){
-        List<String> nums = new ArrayList<>();
-        for (int i = 0; i < 1 * 10000; i++) {
-            String num = RandomStringUtils.randomNumeric(7);
-            if (nums.contains(num)) {
-                Assert.fail("already contains: "+ num);
-            }else {
-                System.out.println("i = "+i+"---"+num);
-                nums.add(num);
-            }
-        }
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     public void test_batchInsertUser() {
@@ -73,11 +60,21 @@ public class UserResourceTest {
     }
 
     @Test
+    public void test_findById(){
+        Optional<User> optionalUser = userRepository.findById(8132686L);
+        if (optionalUser.isPresent()) {
+            Long id = IdGeneratorUtil.randomId(7);
+        }
+    }
+
+    @Test
     public void test_addUser_use_map() {
-        String sql = "insert into User(`name`, age, create_time) " +
-                "values('liudehua', 50, :createTime)";
+        Long id = IdGeneratorUtil.randomId(7);
+        String sql = "insert into User(`id`, `name`, age, create_time) " +
+                "values(:id ,'liudehua', 50, :createTime)";
         Map<String, Object> map = new HashMap<>(1);
         map.put("createTime", LocalDateTime.now());
+        map.put("id", id);
         namedParameterJdbcTemplate.update(sql, map);
     }
 
