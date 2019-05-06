@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
@@ -84,7 +85,26 @@ public class UserResourceTest {
 
     @Test
     public void test_addNewUser_iteration(){
-        addNewUser(8132687L);
+//        addNewUser(8132687L);
+        newUser(2430540L);
+    }
+
+    private void newUser(Long id){
+        User user = new User();
+        user.setId(id);
+        user.setName("user_"+id);
+        user.setCreateTime(LocalDateTime.now());
+
+        String sql = "insert into `user` (`id`, `name`, create_time) " +
+                "values(:id ,:name, :createTime)";
+
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
+        try {
+            namedParameterJdbcTemplate.update(sql, parameterSource);
+        } catch (Exception e) {
+            id = IdGeneratorUtil.randomId(7);
+            newUser(id);
+        }
     }
 
     private void addNewUser(Long id){
