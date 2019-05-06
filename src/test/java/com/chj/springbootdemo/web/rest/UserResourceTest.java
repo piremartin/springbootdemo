@@ -70,12 +70,36 @@ public class UserResourceTest {
     @Test
     public void test_addUser_use_map() {
         Long id = IdGeneratorUtil.randomId(7);
-        String sql = "insert into User(`id`, `name`, age, create_time) " +
-                "values(:id ,'liudehua', 50, :createTime)";
+        String sql = "insert into `user` (`id`, `name`, create_time) " +
+                "values(:id ,'liudehua', :createTime)";
         Map<String, Object> map = new HashMap<>(1);
         map.put("createTime", LocalDateTime.now());
+        map.put("id", 8132687L);
+        try {
+            namedParameterJdbcTemplate.update(sql, map);
+        } catch (Exception e) {
+            System.out.println("AAA");
+        }
+    }
+
+    @Test
+    public void test_addNewUser_iteration(){
+        addNewUser(8132687L);
+    }
+
+    private void addNewUser(Long id){
+        String sql = "insert into `user` (`id`, `name`, create_time) " +
+                "values(:id ,:name, :createTime)";
+        Map<String, Object> map = new HashMap<>(3);
+        map.put("createTime", LocalDateTime.now());
         map.put("id", id);
-        namedParameterJdbcTemplate.update(sql, map);
+        map.put("name", "user_"+id);
+        try {
+            namedParameterJdbcTemplate.update(sql, map);
+        } catch (Exception e) {
+            id = IdGeneratorUtil.randomId(7);
+            addNewUser(id);
+        }
     }
 
     @Test
