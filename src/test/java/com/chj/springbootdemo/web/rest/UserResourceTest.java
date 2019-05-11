@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -101,7 +102,7 @@ public class UserResourceTest {
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
         try {
             namedParameterJdbcTemplate.update(sql, parameterSource);
-        } catch (Exception e) {
+        } catch (DuplicateKeyException e) {
             id = IdGeneratorUtil.randomId(7);
             newUser(id);
         }
